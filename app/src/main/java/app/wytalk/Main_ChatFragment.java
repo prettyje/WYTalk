@@ -2,11 +2,14 @@ package app.wytalk;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -38,9 +41,7 @@ public class Main_ChatFragment extends Fragment {
 
         // Inflate the layout for this fragment
 
-
-
-        View view = inflater.inflate(R.layout.fragment_main__chat,container,false);
+        View view = inflater.inflate(R.layout.fragment_main__chat, container, false);
         setImageLoader(options, config, getContext());
 
 
@@ -48,18 +49,31 @@ public class Main_ChatFragment extends Fragment {
         listView1 = (ListView) view.findViewById(R.id.listview1);
         myAdapter = new MyAdapter(list);
         listView1.setAdapter(myAdapter);
-/*
+
+        /*
         list.add(new listItem(R.drawable.test_image1,"송정은", "하이~~~"));
         list.add(new listItem(R.drawable.test_image2,"백승환","뭐해?"));*/
-        list.add(new listItem("drawable://" + R.drawable.test_image1 ,"송정은", "하이~~~"));
-        list.add(new listItem("drawable://" + R.drawable.test_image2 ,"송정은", "하이~~~"));
-        // sf[1][0] = new SearchFood("drawable://" + R.drawable.koreanfood1, "광장", "순희네빈대떡");
+
+        list.add(new listItem("drawable://" + R.drawable.test_image1, "송정은", "하이~~~"));
+        list.add(new listItem("drawable://" + R.drawable.test_image2, "백승환", "뭐해?"));
+        list.add(new listItem("drawable://" + R.drawable.test_image3, "진소린", "ㄸㄹ~"));
+        list.add(new listItem("drawable://" + R.drawable.test_image4, "안형우", "짲으!"));
 
         return view;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-
+        listView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getActivity().getApplicationContext(),ChatActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
 
     public class listItem {
         //private int profile;
@@ -69,6 +83,7 @@ public class Main_ChatFragment extends Fragment {
 
         public listItem(String url, String name, String chat) {
             //this.profile = profile;
+
             this.url = url;
             this.name = name;
             this.chat = chat;
@@ -117,11 +132,10 @@ public class Main_ChatFragment extends Fragment {
                 //profile.setImageResource(getItem(pos).profile);
                 name.setText(getItem(pos).name);
                 chat.setText(getItem(pos).chat);
-                imageLoader.displayImage(list.get(position).url, profile , options);
 
-               // Glide.with(getContext()).load().into(profile);
+                imageLoader.displayImage(list.get(position).url, profile, options); //이미지 처리
+
             }
-
 
 
             return v;
@@ -131,7 +145,7 @@ public class Main_ChatFragment extends Fragment {
     }
 
     public void setImageLoader(DisplayImageOptions options,
-                               ImageLoaderConfiguration config, Context context){
+                               ImageLoaderConfiguration config, Context context) { //이미지 처리
         options = new DisplayImageOptions.Builder()
                 .considerExifParams(true)
                 .cacheInMemory(true)
