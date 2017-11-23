@@ -37,9 +37,9 @@ public class MainViewActivity extends AppCompatActivity {
         toggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.app_name, R.string.app_name);
 
         drawerLayout.addDrawerListener(toggle);
-        tabLayout.addTab(tabLayout.newTab().setText("친구"));
-        tabLayout.addTab(tabLayout.newTab().setText("채팅"));
-        tabLayout.addTab(tabLayout.newTab().setText("더보기"));
+        tabLayout.addTab(tabLayout.newTab().setText("친구").setIcon(R.drawable.icon3));
+        tabLayout.addTab(tabLayout.newTab().setText("채팅").setIcon(R.drawable.icon4));
+        tabLayout.addTab(tabLayout.newTab().setText("더보기").setIcon(R.drawable.icon5));
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 

@@ -5,4 +5,6 @@ package app.wytalk;
  */
 
 public class Data {
+
+
 }
