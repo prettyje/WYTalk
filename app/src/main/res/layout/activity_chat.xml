@@ -37,7 +37,7 @@
             android:background="@null" />
 
         <ImageButton
-            android:id="@+id/imageButton3"
+            android:id="@+id/imageButton2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="3"
@@ -52,14 +52,47 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/layout"
-        android:background="#ff0000"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.8"
+        android:background="#e6dfdf"
         android:orientation="horizontal">
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/item_linear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/imageButton3"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:background="#e6dfdf"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/icon7" />
+
+            <ImageButton
+                android:id="@+id/imageButton4"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:background="#e6dfdf"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/icon6" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:background="#e6dfdf"
+            android:id="@+id/imoticon_linear">
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>
