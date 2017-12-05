@@ -26,7 +26,11 @@ import java.util.ArrayList;
 
 public class Main_FriendFragment extends Fragment {
 
-    private  ListView mylistView;
+
+    Data data;
+    int size = 0;
+
+    private ListView mylistView;
     private ArrayList<listItem> mylist;
     private MyAdapter myyAdapter;
 
@@ -46,13 +50,15 @@ public class Main_FriendFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        data = new Data();
         View view = inflater.inflate(R.layout.fragment_main__friend, container, false);
-        View view1 = inflater.inflate(R.layout.list_item2,container,false); //item
+        View view1 = inflater.inflate(R.layout.list_item2, container, false); //item
 
         setImageLoader(options, config, getContext());
 
 
-        textView = (TextView)view1.findViewById(R.id.chat);
+        textView = (TextView) view1.findViewById(R.id.chat);
         textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.textlogo));
 
         mylist = new ArrayList<listItem>();
@@ -68,15 +74,28 @@ public class Main_FriendFragment extends Fragment {
         listView.setAdapter(myAdapter);
 
 
-/*내 프로필*/
-        mylist.add(new listItem("drawable://" + R.drawable.test_image1, "송정은", "다 잘될거야!"));
+        try {
+            /***내 프로필***/
+            mylist.add(new listItem("drawable://" + R.drawable.test_image1,
+                    data.userVector.elementAt(0).name, data.userVector.elementAt(0).stateMsg));
+
+            /***친구 목록***/
+
+            size = data.userVector.size();
+            for (int i = 1; i < size; i++) {
+                list.add(new listItem("drawable://" + R.drawable.test_image1,
+                        data.userVector.elementAt(i).name, data.userVector.elementAt(i).stateMsg));
+
+            }
 
 
- /*친구 목록*/
-        list.add(new listItem("drawable://" + R.drawable.test_image2, "백승환", "github"));
-        list.add(new listItem("drawable://" + R.drawable.test_image3, "진소린", "^0^"));
-        list.add(new listItem("drawable://" + R.drawable.test_image4, "안형우", "고난"));
+        } catch (NullPointerException e) {
 
+            mylist.add(new listItem("drawable://" + R.drawable.test_image1, "실패", "실패"));
+            list.add(new listItem("drawable://" + R.drawable.test_image2, "백승환", "github"));
+            list.add(new listItem("drawable://" + R.drawable.test_image3, "진소린", "^0^"));
+            list.add(new listItem("drawable://" + R.drawable.test_image4, "안형우", "고난"));
+        }
 
 
         return view;
@@ -90,12 +109,12 @@ public class Main_FriendFragment extends Fragment {
         mylistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getActivity().getApplicationContext(),Main_Chat_ProfileActivity.class);
+                Intent intent = new Intent(getActivity().getApplicationContext(), Main_Chat_ProfileActivity.class);
 
-                intent.putExtra("User_Name",mylist.get(i).name); //이름 전달
-                intent.putExtra("User_Profile",mylist.get(i).url); // 프로필 사진 전달
-                intent.putExtra("User_Chat",mylist.get(i).chat); // 상태메시지 전달
-                intent.putExtra("Check","myP"); //나의 프로필
+                intent.putExtra("User_Name", mylist.get(i).name); //이름 전달
+                intent.putExtra("User_Profile", mylist.get(i).url); // 프로필 사진 전달
+                intent.putExtra("User_Chat", mylist.get(i).chat); // 상태메시지 전달
+                intent.putExtra("Check", "myP"); //[체크]나의 프로필
                 startActivity(intent);
             }
         });
@@ -104,12 +123,13 @@ public class Main_FriendFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getActivity().getApplicationContext(),Main_Chat_ProfileActivity.class);
+                Intent intent = new Intent(getActivity().getApplicationContext(), Main_Chat_ProfileActivity.class);
 
-                intent.putExtra("User_Name",list.get(i).name); //이름 전달
-                intent.putExtra("User_Profile",list.get(i).url); // 프로필 사진 전달
-                intent.putExtra("User_Chat",list.get(i).chat); // 상태메시지 전달
-                intent.putExtra("Check","frP"); //친구 프로필
+                intent.putExtra("User_Name", list.get(i).name); //이름 전달
+                intent.putExtra("User_Profile", list.get(i).url); // 프로필 사진 전달
+                intent.putExtra("User_Chat", list.get(i).chat); // 상태메시지 전달
+                intent.putExtra("User_ID",data.userVector.elementAt(i+1).id); //id 전달
+                intent.putExtra("Check", "frP"); //[체크]친구 프로필
 
                 startActivity(intent);
             }
@@ -166,19 +186,17 @@ public class Main_FriendFragment extends Fragment {
             if (v == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = inflater.inflate(R.layout.list_item2, parent, false);
-
-                profile = (ImageView) v.findViewById(R.id.profile_image);
-                TextView name = (TextView) v.findViewById(R.id.name);
-                TextView chat = (TextView) v.findViewById(R.id.chat);
-
-
-               // profile.setImageResource(getItem(pos).profile);
-                name.setText(getItem(pos).name);
-                chat.setText(getItem(pos).chat);
-
-                imageLoader.displayImage(list.get(position).url, profile, options); //이미지 처리
-
             }
+            profile = (ImageView) v.findViewById(R.id.profile_image);
+            TextView name = (TextView) v.findViewById(R.id.name);
+            TextView chat = (TextView) v.findViewById(R.id.chat);
+
+
+            // profile.setImageResource(getItem(pos).profile);
+            name.setText(getItem(pos).name);
+            chat.setText(getItem(pos).chat);
+
+            imageLoader.displayImage(list.get(position).url, profile, options); //이미지 처리
 
 
             return v;
@@ -203,6 +221,5 @@ public class Main_FriendFragment extends Fragment {
                 .build();
         ImageLoader.getInstance().init(config);
     }
-
 
 }

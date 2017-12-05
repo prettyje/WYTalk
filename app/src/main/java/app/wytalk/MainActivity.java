@@ -10,10 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,8 +24,19 @@ public class MainActivity extends AppCompatActivity {
     EditText idText; //id
     EditText pwText; //pw
 
-    private Socket socket;
-    FirstConnectThread thread;
+    static Socket socket = null;
+    static DataOutputStream dataOutputStream = null;
+    static DataInputStream dataInputStream = null;
+    static OutputStream outputStream = null;
+    static InputStream inputStream= null;
+
+    //static String host = "192.168.0.39"; //102
+    static String host = "192.168.0.30"; //랩실
+    static int port = 30015;
+
+    FirstConnectThread firstthread;
+
+
 
 
     @Override
@@ -49,14 +61,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                System.out.println("----test1");
-                thread = new FirstConnectThread();
-                System.out.println("----test2");
-                thread.start();
-                System.out.println("----test3");
 
-                //Intent intent = new Intent(getApplicationContext(),MainViewActivity.class);
-                //startActivity(intent);
+                firstthread = new FirstConnectThread();
+                firstthread.start();
+
+               // Intent intent = new Intent(getApplicationContext(),MainViewActivity.class);
+               // startActivity(intent);
             }
         });
 
@@ -64,33 +74,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
     class FirstConnectThread extends Thread {
 
-/*      int port = 80;
-        Object input;
         String output_id;
         String output_pw;
-        String output_num;
-        SharedPreferences id_pref;
-        SharedPreferences.Editor id_commit;*/
+        String output = null; //서버로 보낸 데이터
+        String input = null; //서버로부터 받은 데이터
+       // String data; //서버로부터 받은 데이터
 
-        String output_id;
-        String output_pw;
-        String output; //서버로 보낸 데이터
-        String input; //서버로부터 받은 데이터
+       // String input; //서버로부터 받은 데이터
 
         public void run() {
 
-
-            String host = "192.168.0.30";
-            int port = 30015;
-
-//            memberPref = getSharedPreferences("memberPref", MODE_PRIVATE);
-//          final SharedPreferences.Editor memberEditor = memberPref.edit();
             try {
-                System.out.println("----testa");
-                Socket socket = new Socket(host, port);
-                System.out.println("----testb");
+                System.out.println("start");
+
+
+
+                socket = new Socket(host, port);
+
+
                 System.out.println("서버로 연결되었습니다. : " + host + ", " + port);
 
                 output_id = idText.getText().toString();
@@ -98,44 +103,45 @@ public class MainActivity extends AppCompatActivity {
 
                 output = "[LOGIN]:"+output_id+"/"+output_pw;
 
-                DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                dataOutputStream.write(output.getBytes());
+                outputStream = socket.getOutputStream();
+                inputStream = socket.getInputStream();
+
+
+                dataOutputStream = new DataOutputStream(outputStream);
+
+                dataOutputStream.writeUTF(output);
+               // dataOutputStream.write(output.getBytes());
                 dataOutputStream.flush();
 
                 System.out.println("send-" + output);
 
 
-                DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-                System.out.println("----test4");
 
-                byte [] b = new byte[1024];
-                dataInputStream.read(b);
-                input = new String(b);
-
+                dataInputStream = new DataInputStream(inputStream);
+                input = dataInputStream.readUTF();
                 System.out.println("receive-" + input);
 
 
-                System.out.println("----test5");
-                if (input.toString().equals("[LOGIN]:OK")) {
+                if (input.toString().equals("[LOGIN]:OK")) { //Login 성공시
 
-                    System.out.println("test  ok");
+                    System.out.println("test ok");
 
-                    dataInputStream.close();
-                    dataOutputStream.close();
-                    socket.close();
+                   // dataInputStream.close();
+                   // dataOutputStream.close();
+                   // socket.close();
 
                     Intent intent = new Intent(getApplicationContext(),MainViewActivity.class);
                     startActivity(intent);
 
                 }else{
-                    System.out.println("test  nok");
+                    System.out.println("test nok");
                     //Toast.makeText(MainActivity.this,"잘못된 정보입니다.",Toast.LENGTH_SHORT).show();
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("접근실패");
-                Toast.makeText(MainActivity.this,"접근실패",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this,"접근실패",Toast.LENGTH_SHORT).show();
                 return;
             }
         }

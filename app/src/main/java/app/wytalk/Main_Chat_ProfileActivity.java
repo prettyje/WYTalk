@@ -23,10 +23,12 @@ public class Main_Chat_ProfileActivity extends AppCompatActivity {
     TextView cTextView;
     TextView bTextView;
     ImageButton imageButton;
+
     String check;
     String image;
     String name;
     String chat;
+    String id;
 
     ImageLoader imageLoader = ImageLoader.getInstance();
     ImageLoaderConfiguration config = null;
@@ -61,6 +63,9 @@ public class Main_Chat_ProfileActivity extends AppCompatActivity {
         image = intent.getStringExtra("User_Profile");
         name =  intent.getStringExtra("User_Name");//"이름"문자 받아옴
         chat = intent.getStringExtra("User_Chat");//"상메"문자 받아옴
+        id = intent.getStringExtra("User_ID"); //id 문자 받아옴
+
+
 
         nTextView.setText(name);
         cTextView.setText(chat);
@@ -74,9 +79,10 @@ public class Main_Chat_ProfileActivity extends AppCompatActivity {
 
                 }
                 else{//frP
-                    Intent intent2 = new Intent(getApplicationContext(),ChatActivity.class);
 
+                    Intent intent2 = new Intent(getApplicationContext(),ChatActivity.class);
                     intent2.putExtra("User_Name",name); //이름 전달
+                    intent2.putExtra("User_ID",id); //id 전달
 
                     startActivity(intent2);
                 }  //else끝

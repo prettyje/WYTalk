@@ -15,6 +15,9 @@ import android.view.MenuItem;
 
 public class MainViewActivity extends AppCompatActivity {
 
+
+    NetworkThread networkThread;   //전체 쓰레드
+
     Main_FriendFragment mainFragment1;
     Main_ChatFragment mainFragment2;
     Main_PlusFragment mainFragment3;
@@ -30,6 +33,9 @@ public class MainViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_view);
 
+
+        networkThread = new NetworkThread();
+        networkThread.start();
 
 
         drawerLayout = (DrawerLayout)findViewById(R.id.main_drawer_layout);
@@ -113,6 +119,12 @@ public class MainViewActivity extends AppCompatActivity {
             }
             return null;
         }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
     }
 
 
