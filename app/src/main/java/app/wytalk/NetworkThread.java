@@ -9,6 +9,7 @@ import static app.wytalk.MainActivity.dataInputStream;
 public class NetworkThread extends Thread {
 
 
+    ListChatting listChatting = new ListChatting();
     Data dataClass = new Data();
     String input = null;
 
@@ -52,7 +53,18 @@ public class NetworkThread extends Thread {
 
             /*******************[MSG]  메시지 수신 *******************/
                 else if (data[0].equals("[MSG]")) {
-                    // listFriends.setFriendPanel();
+
+                    //방번호 없으면 (첫 대화시)
+                    if(listChatting.hasNumChatRoom(Integer.parseInt(data[1]) ) == false ){
+                        listChatting.init(data[2],Integer.parseInt(data[1])); //방 추가
+                        dataClass.initchatData(Integer.parseInt(data[1])); //내용저장 가능하게추가
+                    }
+
+                    //내용에 저장
+                    dataClass.addInchat(Integer.parseInt(data[1]),input);
+
+                    // 및 출력
+
                 }
 
 
@@ -62,7 +74,7 @@ public class NetworkThread extends Thread {
 
 
 
-            }
+           }
 
         } catch (Exception e) {
             e.printStackTrace();

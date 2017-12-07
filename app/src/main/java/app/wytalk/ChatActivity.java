@@ -73,14 +73,18 @@ public class ChatActivity extends AppCompatActivity {
         id = intent.getStringExtra("User_ID"); //id 문자 받아옴
 
 /****************** 기존 채팅방 or 새로운 채팅방 확인 ******************/
-        if (listChatting.hasChatRoom(id)) { //기존 채팅방
+
+        if (listChatting.hasIdChatRoom(id)) { //기존 채팅방
+
             chattingnum = listChatting.getChatNum(id); //채팅방 넘버
+            System.out.println("채팅방 넘버 = "+chattingnum);
 
             //화면에 이전 메시지 출력
 
         } else { //새로운 채팅방
             chattingnum = 0; //채팅방 넘버 = 0으로 임의 지정
         }
+
 
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,6 +122,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+/****************** 전송버튼 클릭 시 ******************/
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
