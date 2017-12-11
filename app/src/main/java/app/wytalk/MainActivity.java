@@ -30,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
     static OutputStream outputStream = null;
     static InputStream inputStream= null;
 
-    //static String host = "192.168.0.39"; //102
-    static String host = "192.168.0.30"; //랩실
+    static String host = "192.168.0.39"; //102
+    //static String host = "192.168.0.30"; //랩실
     static int port = 30015;
 
     FirstConnectThread firstthread;

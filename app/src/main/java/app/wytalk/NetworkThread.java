@@ -23,9 +23,11 @@ public class NetworkThread extends Thread {
                 System.out.println("Thread Start");
                 input = dataInputStream.readUTF();
 
-                System.out.println("receive--" + input);
 
                 if (input != null) {
+
+                    System.out.println("receive--" + input);
+
                     input = input.trim(); //앞뒤공백제거
                     String[] data = input.split("::");
 
@@ -61,42 +63,50 @@ public class NetworkThread extends Thread {
 
                         System.out.println("방 번호========"+data[1]);
 
-                       // System.out.println("현재 방 번호========"+listChatting.getChatNum(data[2])); //null
-
-                        //dataClass.userVector.elementAt(0) //내 id
-
-
-
 
                         /*******************방번호 없으면 (첫 대화시)*******************/
                         if (listChatting.hasNumChatRoom(Integer.parseInt(data[1])) == false) {
 
-                            //수신자 = 본인
-                            if(data[2].equals(dataClass.userVector.elementAt(0))){
+                            // 0    1       2       3     4     5
+                            //[MSG] 방번호 수신자 송신자 시간 메시지
+
+
+                            //수신자 = 본인 , 내가 처음 받았을 때
+                            if(data[2].equals(dataClass.userVector.elementAt(0).id)){
 
                                 System.out.println("ok1");
                                 listChatting.init(data[3], Integer.parseInt(data[1])); //방 추가
                                 System.out.println("ok2");
                                 dataClass.initchatData(Integer.parseInt(data[1])); //내용저장 가능하게추가
                                 System.out.println("ok3");
+                                dataClass.addInchat(Integer.parseInt(data[1]), input); //내용 추가
 
-                            }else{//수신자 = 친구
+                            }else{//수신자 = 친구, 내가 보냈을 때
 
                                 System.out.println("ok1");
                                 listChatting.init(data[2], Integer.parseInt(data[1])); //방 추가
                                 System.out.println("ok2");
                                 dataClass.initchatData(Integer.parseInt(data[1])); //내용저장 가능하게추가
                                 System.out.println("ok3");
+                                dataClass.addInchat(Integer.parseInt(data[1]), input); //내용 추가
                             }
 
+
+
+
+                        }
+                        else{
+                            /*******************방번호 있으면(n번째 대화)*******************/
+
+
+                            System.out.println("ok4");
+                            //내용에 저장
+                            dataClass.addInchat(Integer.parseInt(data[1]), input);
+                            System.out.println("ok5");
+                            // 및 출력
                         }
 
-                        /*******************방번호 있으면(n번째 대화)*******************/
-                        System.out.println("ok4");
-                        //내용에 저장
-                        dataClass.addInchat(Integer.parseInt(data[1]), input);
-                        System.out.println("ok5");
-                        // 및 출력
+
 
                     }
 
