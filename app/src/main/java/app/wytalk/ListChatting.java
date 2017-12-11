@@ -1,6 +1,7 @@
 package app.wytalk;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by SJE on 2017-12-04.
@@ -22,7 +23,7 @@ public class ListChatting {
     }
 
     public boolean hasNumChatRoom(Integer chatNum) {
-        return userToChatNum.containsKey(chatNum);
+        return userToChatNum.containsValue(chatNum);
     }
 
     public Integer getChatNum(String userID) {
@@ -31,6 +32,13 @@ public class ListChatting {
 
     public void init(String userID, Integer chatNum ){
         userToChatNum.put(userID,chatNum); //사용자, 방번호
+        System.out.println("------사용자, 방번호 목록-------");
+
+        Iterator<String> iterator = userToChatNum.keySet().iterator();
+        while (iterator.hasNext()) {
+            String key = (String)iterator.next(); // 키 얻기
+            System.out.println("key="+key+" / value="+userToChatNum.get(key));  // 출력
+        }
 
     }
 }

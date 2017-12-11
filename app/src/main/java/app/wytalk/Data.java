@@ -1,5 +1,6 @@
 package app.wytalk;
 
+import java.util.HashMap;
 import java.util.Vector;
 
 /**
@@ -9,15 +10,17 @@ import java.util.Vector;
 public class Data{
 
     public static Vector<User> userVector;
-    public static Vector<ChatData> chatDataVector;
+    public static HashMap<Integer, ChatData> chatDatahash;
+
 
     public Data(){
 
         if(userVector == null)
             userVector = new Vector<User>();
 
-        if(chatDataVector == null)
-            chatDataVector = new Vector<ChatData>();
+        if(chatDatahash == null)
+            chatDatahash = new HashMap<Integer,ChatData>();
+
     }
 
     public void initUserInfo(String id, String name, String stateMsg){
@@ -29,14 +32,25 @@ public class Data{
     public void initchatData(Integer chatNum){
 
         ChatData chatData = new ChatData(chatNum);
-        chatDataVector.add(chatData);
+        chatDatahash.put(chatNum,chatData);
+
     }
 
     public void addInchat(Integer chatNum, String chatIn){
 
-        chatDataVector.get(chatNum).chatIn += chatIn+"@@";
-        //asdfadf@@asdfasdf@@asdfadsf@@
-    }
+        chatDatahash.get(chatNum).chatIn += (chatIn+"@@");
+        chatDatahash.get(chatNum).lastMsg = chatIn;
 
-}
+        chatDatahash.get(chatNum).check = 1;
+        System.out.println("===========확인");
+        System.out.println(chatDatahash.get(chatNum).chatNum);
+        System.out.println(chatDatahash.get(chatNum).chatIn);
+                System.out.println(chatDatahash.get(chatNum).check);
+
+                System.out.println("==========="+chatNum+"번 방 대화내용 저장소");
+                System.out.println(chatDatahash.get(chatNum).chatIn);
+                //asdfadf@@asdfasdf@@asdfadsf@@
+                }
+
+                }
 

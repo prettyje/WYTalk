@@ -16,72 +16,99 @@ public class NetworkThread extends Thread {
 
     public void run() {
 
-        try {
+        while (true) {
+            try {
 
-            System.out.println("Thread Start");
-            input = dataInputStream.readUTF();
 
-            System.out.println("receive-" + input);
+                System.out.println("Thread Start");
+                input = dataInputStream.readUTF();
 
-            if (input != null) {
-                input = input.trim(); //앞뒤공백제거
-                String[] data = input.split("::");
+                System.out.println("receive--" + input);
 
-                for (String s : data) {
-                    System.out.println(s);
-                }
+                if (input != null) {
+                    input = input.trim(); //앞뒤공백제거
+                    String[] data = input.split("::");
+
+                    for (String s : data) {
+                        System.out.println(s);
+                    }
 
 /******************* 프로토콜에 따라 처리하기 *******************/
 
 
-           /*******************[FLIST]  사용자 및 친구 정보 가져오기 *******************/
-                if (data[0].equals("[FLIST]")) {
-                    for (int i = 1; i < data.length; i++) {
-                        String[] info = data[i].split(":");
-                        System.out.println(info[0] + "/" + info[1] + "/" + info[2]);
-                        dataClass.initUserInfo(info[0], info[1], info[2]);
+                    /*******************[FLIST]  사용자 및 친구 정보 가져오기 *******************/
+                    if (data[0].equals("[FLIST]")) {
+                        for (int i = 1; i < data.length; i++) {
+                            String[] info = data[i].split(":");
+                            System.out.println(info[0] + "/" + info[1] + "/" + info[2]);
+                            dataClass.initUserInfo(info[0], info[1], info[2]);
+                        }
+
+                        for (User user : dataClass.userVector) {
+                            System.out.println(user.name);
+                        }
+
+                    } else if (data[0].equals("[FLIST_END]")) {
+                        // listFriends.setFriendPanel();
                     }
 
-                    for (User user : dataClass.userVector) {
-                        System.out.println(user.name);
+                    /*******************[MSG]  메시지 수신 *******************/
+                    else if (data[0].equals("[MSG]")) {
+
+                        System.out.println("msg수신");
+
+                        //[MSG] 방번호 수신자 송신자 시간 메시지
+
+                        System.out.println("방 번호========"+data[1]);
+
+                       // System.out.println("현재 방 번호========"+listChatting.getChatNum(data[2])); //null
+
+                        //dataClass.userVector.elementAt(0) //내 id
+
+
+
+
+                        /*******************방번호 없으면 (첫 대화시)*******************/
+                        if (listChatting.hasNumChatRoom(Integer.parseInt(data[1])) == false) {
+
+                            //수신자 = 본인
+                            if(data[2].equals(dataClass.userVector.elementAt(0))){
+
+                                System.out.println("ok1");
+                                listChatting.init(data[3], Integer.parseInt(data[1])); //방 추가
+                                System.out.println("ok2");
+                                dataClass.initchatData(Integer.parseInt(data[1])); //내용저장 가능하게추가
+                                System.out.println("ok3");
+
+                            }else{//수신자 = 친구
+
+                                System.out.println("ok1");
+                                listChatting.init(data[2], Integer.parseInt(data[1])); //방 추가
+                                System.out.println("ok2");
+                                dataClass.initchatData(Integer.parseInt(data[1])); //내용저장 가능하게추가
+                                System.out.println("ok3");
+                            }
+
+                        }
+
+                        /*******************방번호 있으면(n번째 대화)*******************/
+                        System.out.println("ok4");
+                        //내용에 저장
+                        dataClass.addInchat(Integer.parseInt(data[1]), input);
+                        System.out.println("ok5");
+                        // 및 출력
+
                     }
 
-                }
-                else if (data[0].equals("[FLIST_END]")) {
-                    // listFriends.setFriendPanel();
-                }
-
-            /*******************[MSG]  메시지 수신 *******************/
-                else if (data[0].equals("[MSG]")) {
-
-                    //방번호 없으면 (첫 대화시)
-                    if(listChatting.hasNumChatRoom(Integer.parseInt(data[1]) ) == false ){
-                        listChatting.init(data[2],Integer.parseInt(data[1])); //방 추가
-                        dataClass.initchatData(Integer.parseInt(data[1])); //내용저장 가능하게추가
-                    }
-
-                    //내용에 저장
-                    dataClass.addInchat(Integer.parseInt(data[1]),input);
-
-                    // 및 출력
 
                 }
 
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("접근실패");
+                return;
+            }
 
-
-
-
-
-
-
-           }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("접근실패");
-            return;
         }
-
-
     }
 }
