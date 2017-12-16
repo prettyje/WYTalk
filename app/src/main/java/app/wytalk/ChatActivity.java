@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
-import static app.wytalk.MainActivity.dataOutputStream;
+import static app.wytalk.NetworkThread.dataOutputStream;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -93,12 +93,12 @@ public class ChatActivity extends AppCompatActivity {
         System.out.println("test3");
 /****************** 기존 채팅방 or 새로운 채팅방 확인 ******************/
 
-        System.out.println("============id"+id);
+        System.out.println("============id" + id);
 
         Iterator<String> iterator = listChatting.userToChatNum.keySet().iterator();
         while (iterator.hasNext()) {
-            String key = (String)iterator.next(); // 키 얻기
-            System.out.println("key="+key+" / value="+listChatting.userToChatNum.get(key));  // 출력
+            String key = (String) iterator.next(); // 키 얻기
+            System.out.println("key=" + key + " / value=" + listChatting.userToChatNum.get(key));  // 출력
         }
 
         /****************** 기존 채팅방 ******************/
@@ -117,6 +117,7 @@ public class ChatActivity extends AppCompatActivity {
             if (chatin != null) {
                 chatwrite(chatin);
             }
+
         }
         /******************새로운 채팅방******************/
         else { //새로운 채팅방
@@ -219,8 +220,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-
-
     @Override
     public void onBackPressed() {
         if (check == 0) { //basic
@@ -233,13 +232,14 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-    private void refresh(String inputValue,int _str){
-        m_Adapter.add(inputValue,_str);
-        m_Adapter.notifyDataSetChanged();
+    private void refresh(String inputValue, int _str) {
+        m_Adapter.add(inputValue, _str);
+        //m_Adapter.notifyDataSetChanged();
+        //m_ListView.deferNotifyDataSetChanged();
 
 
-       // m_ListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-       // m_ListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        // m_ListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        // m_ListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         //m_ListView.smoothScrollToPosition(m_ListView.getLastVisiblePosition());
         //m_ListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
     }
@@ -254,8 +254,14 @@ public class ChatActivity extends AppCompatActivity {
 
 
             if (s != null) {
+
+
                 s = s.trim(); //앞뒤공백제거
                 String[] data2 = s.split("::");   //::처리
+
+                if(data2.length==5){
+                    data2[5] = "";
+                }
 
                 for (String s2 : data2) {   //data2 =  [MSG] 채팅번호 수신자 송신자 시간 메시지
                     System.out.println(s2);
@@ -265,13 +271,15 @@ public class ChatActivity extends AppCompatActivity {
 
                     System.out.println("수신자 id " + data2[2] + " 친구id " + id);
                     if (data2[3].equals(id)) { //송신자 = 친구
-                        refresh(data2[5],0);
+                        refresh(data2[5], 0);
                         //m_Adapter.add(data2[5], 0);
-                    } else { //송신자 = 나
-                        refresh(data2[5],1);
-                        //m_Adapter.add(data2[5], 1);
-                    }
 
+                    } else { //송신자 = 나
+                        refresh(data2[5], 1);
+                        //m_Adapter.add(data2[5], 1);
+
+                    }
+                    //m_Adapter.notifyDataSetChanged();
 
                 }
 
@@ -292,9 +300,9 @@ public class ChatActivity extends AppCompatActivity {
                     if (listChatting.hasIdChatRoom(id)) { //기존 채팅방, 채팅방 넘버 있을 때
 
                         chattingnum = listChatting.getChatNum(id);
-                        if(dataClass.chatDatahash.get(chattingnum).check==1){
+                        if (dataClass.chatDatahash.get(chattingnum).check == 1) {
                             dataClass.chatDatahash.get(chattingnum).check = 0;
-                            System.out.println("마지막 내용"+dataClass.chatDatahash.get(chattingnum).lastMsg);
+                            System.out.println("마지막 내용" + dataClass.chatDatahash.get(chattingnum).lastMsg);
                             chatwrite(dataClass.chatDatahash.get(chattingnum).lastMsg);
                             System.out.println("출력반복");
                         }
@@ -314,9 +322,6 @@ public class ChatActivity extends AppCompatActivity {
                     }catch (NullPointerException e){
                         //e.printStackTrace();
                     }*/
-
-
-
 
 
             }

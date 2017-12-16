@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -37,9 +38,9 @@ public class Main_FriendFragment extends Fragment {
     private ListView listView;
     private ArrayList<listItem> list;
     private MyAdapter myAdapter;
-
-
     private TextView textView;
+
+    Button button;
 
     ImageLoader imageLoader = ImageLoader.getInstance();
     ImageLoaderConfiguration config = null;
@@ -57,6 +58,9 @@ public class Main_FriendFragment extends Fragment {
 
         setImageLoader(options, config, getContext());
 
+
+
+        button = (Button)view.findViewById(R.id.button);
 
         textView = (TextView) view1.findViewById(R.id.chat);
         textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.textlogo));
@@ -76,8 +80,11 @@ public class Main_FriendFragment extends Fragment {
 
         try {
             /***내 프로필***/
+
             mylist.add(new listItem("drawable://" + R.drawable.test_image1,
                     data.userVector.elementAt(0).name, data.userVector.elementAt(0).stateMsg));
+
+            myyAdapter.notifyDataSetChanged();
 
             /***친구 목록***/
 
@@ -85,7 +92,7 @@ public class Main_FriendFragment extends Fragment {
             for (int i = 1; i < size; i++) {
                 list.add(new listItem("drawable://" + R.drawable.test_image1,
                         data.userVector.elementAt(i).name, data.userVector.elementAt(i).stateMsg));
-
+                myyAdapter.notifyDataSetChanged();
             }
 
 
@@ -104,6 +111,7 @@ public class Main_FriendFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
 
 
         mylistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -128,7 +136,7 @@ public class Main_FriendFragment extends Fragment {
                 intent.putExtra("User_Name", list.get(i).name); //이름 전달
                 intent.putExtra("User_Profile", list.get(i).url); // 프로필 사진 전달
                 intent.putExtra("User_Chat", list.get(i).chat); // 상태메시지 전달
-                intent.putExtra("User_ID",data.userVector.elementAt(i+1).id); //id 전달
+                intent.putExtra("User_ID", data.userVector.elementAt(i + 1).id); //id 전달
                 intent.putExtra("Check", "frP"); //[체크]친구 프로필
 
                 startActivity(intent);

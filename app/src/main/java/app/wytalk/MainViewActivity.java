@@ -34,8 +34,13 @@ public class MainViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_view);
 
 
-        networkThread = new NetworkThread();
-        networkThread.start();
+       /* networkThread = new NetworkThread();
+        networkThread.start();*/
+
+/*        Toast.makeText(getApplicationContext(),"Service 시작",Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(MainViewActivity.this,MyService.class);
+        startService(intent);*/
+
 
 
         drawerLayout = (DrawerLayout)findViewById(R.id.main_drawer_layout);

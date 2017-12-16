@@ -33,8 +33,8 @@ public class CustomAdapter extends BaseAdapter {
         m_List = new ArrayList();
     }
     // 외부에서 아이템 추가 요청 시 사용
-    public void add(String _msg,int _type) {
 
+    public void add(String _msg,int _type) {
         m_List.add(new ListContents(_msg,_type));
     }
 

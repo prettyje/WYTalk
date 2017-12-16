@@ -4,37 +4,39 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
+import static app.wytalk.NetworkThread.dataOutputStream;
 
 public class MainActivity extends AppCompatActivity {
+
 
     Button button1;
 
     EditText idText; //id
     EditText pwText; //pw
 
-    static Socket socket = null;
+/*    static Socket socket = null;
     static DataOutputStream dataOutputStream = null;
     static DataInputStream dataInputStream = null;
     static OutputStream outputStream = null;
-    static InputStream inputStream= null;
+    static InputStream inputStream= null;*/
 
-    static String host = "192.168.0.39"; //102
-    //static String host = "192.168.0.30"; //랩실
-    static int port = 30015;
 
-    FirstConnectThread firstthread;
+
+
+/*    //static String host = "192.168.0.39"; //102
+    static String host = "192.168.0.30"; //랩실
+    static int port = 30015;*/
+
+    //FirstConnectThread firstthread;
 
 
 
@@ -50,6 +52,11 @@ public class MainActivity extends AppCompatActivity {
             }, 466);
         }//인터넷 허가
 
+/*******************서비스 시작***********************/
+        Toast.makeText(getApplicationContext(),"Service 시작",Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(MainActivity.this,MyService.class);
+        startService(intent);
 
 
         button1 = (Button) findViewById(R.id.button1);
@@ -61,12 +68,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                login();
 
-                firstthread = new FirstConnectThread();
-                firstthread.start();
 
-               // Intent intent = new Intent(getApplicationContext(),MainViewActivity.class);
-               // startActivity(intent);
             }
         });
 
@@ -75,8 +79,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void login(){
 
-    class FirstConnectThread extends Thread {
+        String output_id;
+        String output_pw;
+        String output = null; //서버로 보낸 데이터
+        // String input = null; //서버로부터 받은 데이터
+
+        output_id = idText.getText().toString();
+        output_pw = pwText.getText().toString();
+        output = "[LOGIN]:"+output_id+"/"+output_pw;
+
+
+        try {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            dataOutputStream.writeUTF(output);
+            dataOutputStream.flush();
+
+            System.out.println("send-" + output);
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+
+    }
+
+
+/*    class FirstConnectThread extends Thread {
 
         String output_id;
         String output_pw;
@@ -110,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
                 dataOutputStream = new DataOutputStream(outputStream);
 
                 dataOutputStream.writeUTF(output);
-               // dataOutputStream.write(output.getBytes());
                 dataOutputStream.flush();
 
                 System.out.println("send-" + output);
@@ -126,9 +160,6 @@ public class MainActivity extends AppCompatActivity {
 
                     System.out.println("test ok");
 
-                   // dataInputStream.close();
-                   // dataOutputStream.close();
-                   // socket.close();
 
                     Intent intent = new Intent(getApplicationContext(),MainViewActivity.class);
                     startActivity(intent);
@@ -145,6 +176,6 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
         }
-    }
+    }*/
 
 }
