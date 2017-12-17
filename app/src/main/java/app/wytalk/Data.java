@@ -67,5 +67,37 @@ public class Data {
         //asdfadf@@asdfasdf@@asdfadsf@@
     }
 
+    public void addInchatimg(Integer chatNum, String chatIn, Bitmap bitmap) { //채팅 내용 추가
+
+
+
+        String s;
+        s = chatIn.trim(); //앞뒤공백제거
+        String[] data = s.split("::");
+
+        System.out.println("*****"+data[5]);
+        data[5] = "++bitmap";
+        System.out.println("*****"+data[5]);
+
+        chatIn = data[0]+"::"+data[1]+"::"+data[2]+"::"+data[3]+"::"+data[4]+"::"+data[5];
+
+        chatDatahash.get(chatNum).chatIn += (chatIn + "@@");
+        chatDatahash.get(chatNum).lastMsg = chatIn;
+        chatDatahash.get(chatNum).bitmapVector.add(bitmap);
+
+
+        chatDatahash.get(chatNum).check = 1;
+        System.out.println("===========확인");
+        System.out.println(chatDatahash.get(chatNum).chatNum);
+        System.out.println(chatDatahash.get(chatNum).chatIn);
+        System.out.println(chatDatahash.get(chatNum).check);
+
+        System.out.println("===========" + chatNum + "번 방 대화내용 저장소");
+
+        System.out.println(chatDatahash.get(chatNum).chatIn);
+        System.out.println("===========" + chatDatahash.get(chatNum).lastMsg + "last 메시지");
+        //asdfadf@@asdfasdf@@asdfadsf@@
+    }
+
 }
 

@@ -4,7 +4,6 @@ package app.wytalk;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -149,10 +148,9 @@ public class Main_FriendFragment extends Fragment {
                     //      bitmap,null,null);
 
                     String path = getBase64String(bitmap);
+                   System.out.println("img : " + path);
 
-                    String s = Uri.decode(path);
-
-                    mylist.add(new listItem(s,
+                    mylist.add(new listItem(path,
                             data.userVector.elementAt(0).name, data.userVector.elementAt(0).stateMsg));
 
                     myyAdapter.notifyDataSetChanged();
@@ -264,7 +262,14 @@ public class Main_FriendFragment extends Fragment {
             name.setText(getItem(pos).name);
             chat.setText(getItem(pos).chat);
 
+
+       /*    Glide.with(getActivity().getApplicationContext()).
+                    load(list.get(position).url).into(profile);
+*/
+
             imageLoader.displayImage(list.get(position).url, profile, options); //이미지 처리
+
+
 /*
             Uri.fromFile(file).toString();
             Uri.

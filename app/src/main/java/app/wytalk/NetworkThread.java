@@ -76,7 +76,7 @@ public class NetworkThread extends Thread {
             try {
 
 
-              //  dataInputStream.
+                //  dataInputStream.
                 //System.out.println("Thread Start--");
                 input = dataInputStream.readUTF();
 
@@ -133,15 +133,92 @@ public class NetworkThread extends Thread {
                         int size = Integer.parseInt(data[1]);
                         byte[] bytes = new byte[size];
 
-                        dataInputStream.readFully(bytes,0,size);
+                        dataInputStream.readFully(bytes, 0, size);
                         String userID = data[2];
                         System.out.println("dis.read(bytes) ok");
 
                         Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        dataClass.addInimg(userID,image);
+                        dataClass.addInimg(userID, image);
                         System.out.println("Success");
 
-}
+                    }
+                    /*******************[IMG] 이미지 가져오기*******************/
+                    else if (data[0].equals("[IMG]")) {
+                        System.out.println("img send.....");
+                        int size = Integer.parseInt(data[5]);
+                        byte[] bytes = new byte[size];
+                        String userID = data[2];
+
+                        dataInputStream.readFully(bytes, 0, size);
+                        System.out.println("dis.read(bytes) ok");
+
+                        Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+
+                        System.out.println("img수신");
+                        handler.sendEmptyMessage(1);//쓰레드에 있는 핸들러에게 메세지를 보냄
+
+                        //[MSG] 방번호 수신자 송신자 시간 메시지
+
+
+                        System.out.println("방 번호========" + data[1]);
+
+
+                        /*******************방번호 없으면 (첫 대화시)*******************/
+                        if (listChatting.hasNumChatRoom(Integer.parseInt(data[1])) == false) {
+
+                            // 0    1       2       3     4     5
+                            //[MSG] 방번호 수신자 송신자 시간  바이트
+
+
+                            //수신자 = 본인 , 내가 처음 받았을 때
+                            if (data[2].equals(dataClass.userVector.elementAt(0).id)) {
+
+                                System.out.println("ok1");
+                                listChatting.init(data[3], Integer.parseInt(data[1])); //방 추가
+                                System.out.println("ok2");
+                                dataClass.initchatData(Integer.parseInt(data[1])); //내용저장 가능하게추가
+                                System.out.println("ok3");
+                                dataClass.addInchatimg(Integer.parseInt(data[1]), input,image); //내용 추가
+
+                            } else {//수신자 = 친구, 내가 보냈을 때
+
+                                System.out.println("ok1");
+                                listChatting.init(data[2], Integer.parseInt(data[1])); //방 추가
+                                System.out.println("ok2");
+                                dataClass.initchatData(Integer.parseInt(data[1])); //내용저장 가능하게추가
+                                System.out.println("ok3");
+                                dataClass.addInchatimg(Integer.parseInt(data[1]), input,image); //내용 추가
+                            }
+
+
+                        } else {
+                            /*******************방번호 있으면(n번째 대화)*******************/
+
+
+                            System.out.println("ok4");
+                            //내용에 저장
+                            dataClass.addInchatimg(Integer.parseInt(data[1]), input,image);
+                            System.out.println("ok5");
+                            // 및 출력
+                        }
+
+
+
+
+
+
+
+
+
+
+
+
+                        // dataClass.addInimg(userID, image);
+
+                        System.out.println("Success");
+
+                    }
                     /*******************[MSG]  메시지 수신 *******************/
                     else if (data[0].equals("[MSG]")) {
 

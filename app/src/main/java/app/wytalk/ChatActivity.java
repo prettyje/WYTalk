@@ -184,9 +184,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View view) {
 
 
-
-
-                System.out.println(">"+editText+"<");
+                System.out.println(">" + editText + "<");
                 if (editText.getText().equals("") == false) {
                     System.out.println("check--------");
                     if (listChatting.hasIdChatRoom(id)) { //기존 채팅방
@@ -232,8 +230,8 @@ public class ChatActivity extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // check = 0;
-               // frameLayout.setVisibility(View.GONE);
+                // check = 0;
+                // frameLayout.setVisibility(View.GONE);
 
                 System.out.println("check--------");
                 if (listChatting.hasIdChatRoom(id)) { //기존 채팅방
@@ -287,19 +285,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-    private void refresh(String inputValue, int _str) {
-        m_Adapter.add(inputValue, _str);
-        //m_Adapter.notifyDataSetChanged();
-        //m_ListView.deferNotifyDataSetChanged();
-
-        //m_ListView.requestFocus();
-
-        // m_ListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-        // m_ListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-        //m_ListView.smoothScrollToPosition(m_ListView.getLastVisiblePosition());
-        //m_ListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-    }
-
     public void chatwrite(String input) {
 
         chatin = input.trim(); //앞뒤공백제거
@@ -324,20 +309,27 @@ public class ChatActivity extends AppCompatActivity {
                 }
 
 
-
                 if (data2[5] != null) {
 
                     System.out.println("수신자 id " + data2[2] + " 친구id " + id);
                     if (data2[3].equals(id)) { //송신자 = 친구
-                        refresh(data2[5], 0);
-                        //m_Adapter.add(data2[5], 0);
-
-                    } else { //송신자 = 나
-                        refresh(data2[5], 1);
-                        //m_Adapter.add(data2[5], 1);
+                        if(data2[5].equals("++bitmap")){
+                            m_Adapter.add2(data2[5], 0,Integer.parseInt(data2[1]));
+                        }
+                        else{
+                            m_Adapter.add(data2[5], 0);
+                        }
 
                     }
-                    //m_Adapter.notifyDataSetChanged();
+                    else { //송신자 = 나
+                        if(data2[5].equals("++bitmap")){
+                            m_Adapter.add2(data2[5], 1,Integer.parseInt(data2[1])); //방번호
+                        }else{
+                            m_Adapter.add(data2[5], 1);
+                        }
+
+
+                    }
 
                 }
 
@@ -347,8 +339,9 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     class ChatThread extends Thread {
-
+        int i = 0;
         public void run() {
+
             while (true) {
 
 
@@ -360,11 +353,12 @@ public class ChatActivity extends AppCompatActivity {
                         chattingnum = listChatting.getChatNum(id);
                         if (dataClass.chatDatahash.get(chattingnum).check == 1) {
                             dataClass.chatDatahash.get(chattingnum).check = 0;
-                            System.out.println("checktest마지막 내용" + dataClass.chatDatahash.get(chattingnum).lastMsg);
+                            System.out.println("checktest마지막 내용" + dataClass.chatDatahash.get(chattingnum).lastMsg + i);
                             chatwrite(dataClass.chatDatahash.get(chattingnum).lastMsg);
                             System.out.println("checktest출력반복");
                         }
 
+                        i++;
                     }
 
                 } catch (Exception e) {
