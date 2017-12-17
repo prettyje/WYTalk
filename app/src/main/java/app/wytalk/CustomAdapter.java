@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 public class CustomAdapter extends BaseAdapter {
 
     public class ListContents{
+
 
         public String msg;
         public int type;
@@ -68,6 +71,9 @@ public class CustomAdapter extends BaseAdapter {
         View            viewRight = null;
         View            viewLeft = null;
 
+        FrameLayout frameLayout = null;
+        ImageView imageView = null;
+
 
 
         // 리스트가 길어지면서 현재 화면에 보이지 않는 아이템은 converView가 null인 상태로 들어 옴
@@ -81,6 +87,9 @@ public class CustomAdapter extends BaseAdapter {
             viewRight    = (View) convertView.findViewById(R.id.imageViewright);
             viewLeft    = (View) convertView.findViewById(R.id.imageViewleft);
 
+            frameLayout = (FrameLayout) convertView.findViewById(R.id.frameLayout);
+            imageView = (ImageView) convertView.findViewById(R.id.imageView);
+
 
             // 홀더 생성 및 Tag로 등록
             holder = new CustomHolder();
@@ -88,6 +97,10 @@ public class CustomAdapter extends BaseAdapter {
             holder.layout = layout;
             holder.viewRight = viewRight;
             holder.viewLeft = viewLeft;
+
+            holder.frameLayout = frameLayout;
+            holder.imageView = imageView;
+
             convertView.setTag(holder);
         }
         else {
@@ -96,30 +109,61 @@ public class CustomAdapter extends BaseAdapter {
             layout  = holder.layout;
             viewRight = holder.viewRight;
             viewLeft = holder.viewLeft;
-        }
 
-        // Text 등록
-        text.setText(m_List.get(position).msg);
+            frameLayout = holder.frameLayout;
+            imageView = holder.imageView;
 
-        if( m_List.get(position).type == 0 ) {
-            text.setBackgroundResource(R.drawable.textlogo);
-            layout.setGravity(Gravity.LEFT);
-            viewRight.setVisibility(View.GONE);
-            viewLeft.setVisibility(View.GONE);
-        }else if(m_List.get(position).type == 1){
-            text.setBackgroundResource(R.drawable.textlogo);
-            layout.setGravity(Gravity.RIGHT);
-            viewRight.setVisibility(View.GONE);
-            viewLeft.setVisibility(View.GONE);
-        }else if(m_List.get(position).type == 2){
-            text.setBackgroundResource(R.drawable.textlogo);
-            layout.setGravity(Gravity.CENTER);
-            viewRight.setVisibility(View.VISIBLE);
-            viewLeft.setVisibility(View.VISIBLE);
         }
 
 
+/***********************이모티콘******************************/
+        if(m_List.get(position).msg.equals("[PIMO1]")){
 
+            System.out.println("checktest이모티콘 출력---------------");
+            imageView.setImageResource(R.drawable.imo);
+            if( m_List.get(position).type == 0 ) {
+                frameLayout.setBackgroundResource(R.drawable.textlogo);
+                layout.setGravity(Gravity.LEFT);
+                viewRight.setVisibility(View.GONE);
+                viewLeft.setVisibility(View.GONE);
+            }else if(m_List.get(position).type == 1){
+                frameLayout.setBackgroundResource(R.drawable.textlogo);
+                layout.setGravity(Gravity.RIGHT);
+                viewRight.setVisibility(View.GONE);
+                viewLeft.setVisibility(View.GONE);
+            }else if(m_List.get(position).type == 2){
+                frameLayout.setBackgroundResource(R.drawable.textlogo);
+                layout.setGravity(Gravity.CENTER);
+                viewRight.setVisibility(View.VISIBLE);
+                viewLeft.setVisibility(View.VISIBLE);
+            }
+
+
+/***********************일반 텍스트*****************************/
+        }else{
+            // Text 등록
+            text.setText(m_List.get(position).msg);
+
+            System.out.println("checktest텍스트 출력---------------");
+            if( m_List.get(position).type == 0 ) {
+                text.setBackgroundResource(R.drawable.textlogo);
+                layout.setGravity(Gravity.LEFT);
+                viewRight.setVisibility(View.GONE);
+                viewLeft.setVisibility(View.GONE);
+            }else if(m_List.get(position).type == 1){
+                text.setBackgroundResource(R.drawable.textlogo);
+                layout.setGravity(Gravity.RIGHT);
+                viewRight.setVisibility(View.GONE);
+                viewLeft.setVisibility(View.GONE);
+            }else if(m_List.get(position).type == 2){
+                text.setBackgroundResource(R.drawable.textlogo);
+                layout.setGravity(Gravity.CENTER);
+                viewRight.setVisibility(View.VISIBLE);
+                viewLeft.setVisibility(View.VISIBLE);
+            }
+
+
+        }
 
         return convertView;
     }
@@ -127,6 +171,10 @@ public class CustomAdapter extends BaseAdapter {
     private class CustomHolder {
         TextView    m_TextView;
         LinearLayout    layout;
+
+        FrameLayout frameLayout;
+        ImageView imageView;
+
         View viewRight;
         View viewLeft;
     }

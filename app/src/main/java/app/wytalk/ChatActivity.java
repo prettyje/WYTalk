@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -45,6 +46,7 @@ public class ChatActivity extends AppCompatActivity {
     Button sendButton;  //send버튼
 
     EditText editText; // 텍스트 창
+    ImageView imageView;//이미지
 
 
     @Override
@@ -73,6 +75,8 @@ public class ChatActivity extends AppCompatActivity {
         frameLayout = (FrameLayout) findViewById(R.id.layout);
         itemLinear = (LinearLayout) findViewById(R.id.item_linear);
         imoticonLinear = (LinearLayout) findViewById(R.id.imoticon_linear);
+
+        imageView = (ImageView) findViewById(R.id.imageView2);
 
         frameLayout.setVisibility(View.GONE);
         check = 0; //basic
@@ -137,14 +141,16 @@ public class ChatActivity extends AppCompatActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                imoticonLinear.setVisibility(View.GONE);
+
                 if (check == 0) { //basic
                     check = 1;
                     frameLayout.setVisibility(View.VISIBLE);
                     itemLinear.bringToFront();
-                } else if (check == 1) {
+                } else if (check == 1) { //파일 화면
                     check = 0;
                     frameLayout.setVisibility(View.GONE);
-                } else if (check == 2) {
+                } else if (check == 2) { //이모티콘 화면
                     check = 1;
                     itemLinear.bringToFront();
                 }
@@ -155,14 +161,16 @@ public class ChatActivity extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (check == 0) {
+
+                imoticonLinear.setVisibility(View.VISIBLE);
+                if (check == 0) { //basic
                     check = 2;
                     frameLayout.setVisibility(View.VISIBLE);
                     imoticonLinear.bringToFront();
-                } else if (check == 1) {
+                } else if (check == 1) { //파일화면
                     check = 2;
                     imoticonLinear.bringToFront();
-                } else if (check == 2) {
+                } else if (check == 2) { //이모티콘 화면
                     check = 0;
                     frameLayout.setVisibility(View.GONE);
                 }
@@ -176,6 +184,9 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View view) {
 
 
+
+
+                System.out.println(">"+editText+"<");
                 if (editText.getText().equals("") == false) {
                     System.out.println("check--------");
                     if (listChatting.hasIdChatRoom(id)) { //기존 채팅방
@@ -217,6 +228,50 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+/****************** 이모티콘 클릭 시 ******************/
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               // check = 0;
+               // frameLayout.setVisibility(View.GONE);
+
+                System.out.println("check--------");
+                if (listChatting.hasIdChatRoom(id)) { //기존 채팅방
+                    chattingnum = listChatting.getChatNum(id); //채팅방 넘버
+                }
+
+                String icon = "[PIMO1]";
+                long now = System.currentTimeMillis();
+                Date date = new Date(now);
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                //yyyy/MM/dd HH:mm:ss
+                String getTime = sdf.format(date); //현재 시간
+                output = "[MSG]::" + chattingnum + "::" + id + "::" + myid + "::" + getTime + "::" + icon;
+
+                try {
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+
+                    System.out.println("test-send 1 chattingnum = " + chattingnum);
+
+                    System.out.println("test-send" + output);
+                    dataOutputStream.writeUTF(output);
+                    // dataOutputStream.write(output.getBytes());
+                    dataOutputStream.flush();
+
+                    //editText.setText("");
+
+
+                    //chatwrite(dataClass.chatDatahash.get(chattingnum).lastMsg);
+                    System.out.println("test-send 2 chattingnum = " + chattingnum);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+            }
+        });
     }
 
 
@@ -254,19 +309,21 @@ public class ChatActivity extends AppCompatActivity {
             System.out.println(s);
 
 
-            if (s != null) {
+            if (s != "") {
 
 
                 s = s.trim(); //앞뒤공백제거
                 String[] data2 = s.split("::");   //::처리
 
-                if(data2.length==5){
+                if (data2.length == 5) {
                     data2[5] = "";
                 }
 
                 for (String s2 : data2) {   //data2 =  [MSG] 채팅번호 수신자 송신자 시간 메시지
                     System.out.println(s2);
                 }
+
+
 
                 if (data2[5] != null) {
 
@@ -303,9 +360,9 @@ public class ChatActivity extends AppCompatActivity {
                         chattingnum = listChatting.getChatNum(id);
                         if (dataClass.chatDatahash.get(chattingnum).check == 1) {
                             dataClass.chatDatahash.get(chattingnum).check = 0;
-                            System.out.println("마지막 내용" + dataClass.chatDatahash.get(chattingnum).lastMsg);
+                            System.out.println("checktest마지막 내용" + dataClass.chatDatahash.get(chattingnum).lastMsg);
                             chatwrite(dataClass.chatDatahash.get(chattingnum).lastMsg);
-                            System.out.println("출력반복");
+                            System.out.println("checktest출력반복");
                         }
 
                     }
@@ -313,16 +370,6 @@ public class ChatActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
-
-/*                    try{
-                        if (dataClass.chatDatahash.get(id).check == 1) {
-                            chatwrite(dataClass.chatDatahash.get(id).lastMsg);
-                        }
-                    }catch (NullPointerException e){
-                        //e.printStackTrace();
-                    }*/
 
 
             }
