@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import static app.wytalk.NetworkThread.dataOutputStream;
+import static app.wytalk.MyService.dataOutputStream;
 
 public class MainActivity extends AppCompatActivity {
 

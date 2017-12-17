@@ -3,9 +3,12 @@ package app.wytalk;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +26,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class Main_FriendFragment extends Fragment {
@@ -59,8 +63,7 @@ public class Main_FriendFragment extends Fragment {
         setImageLoader(options, config, getContext());
 
 
-
-        button = (Button)view.findViewById(R.id.button);
+        button = (Button) view.findViewById(R.id.button);
 
         textView = (TextView) view1.findViewById(R.id.chat);
         textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.textlogo));
@@ -81,9 +84,13 @@ public class Main_FriendFragment extends Fragment {
         try {
             /***내 프로필***/
 
+
             mylist.add(new listItem("drawable://" + R.drawable.test_image1,
                     data.userVector.elementAt(0).name, data.userVector.elementAt(0).stateMsg));
 
+         /*   mylist.add(new listItem("drawable://" + data.userVector.elementAt(0).id,
+                    data.userVector.elementAt(0).name, data.userVector.elementAt(0).stateMsg));
+*/
             myyAdapter.notifyDataSetChanged();
 
             /***친구 목록***/
@@ -113,6 +120,59 @@ public class Main_FriendFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+
+                    // list.clear();
+                    mylist.clear();
+                    /***내 프로필***/
+
+
+                    //   String path = Images.Media.insertImage(context.getContentResolver(), objImage,null, null);
+                    //  Uri image1= Uri.parse(path);
+
+                   /* String path = MediaStore.Images.Media.insertImage(getContext() .getContentResolver(),
+                            data.imgdatahash.get(data.userVector.elementAt(0).id),null,null);
+                    */
+                    // Uri image1 = Uri.parse(path);
+
+                    /***     Uri.parse(MediaStore.Images.Media.insertImage(getContext() .getContentResolver(),
+                     data.imgdatahash.get(data.userVector.elementAt(0).id),null,null))***/
+
+                    //data.imgdatahash.get(data.userVector.elementAt(0).id)
+                    // Drawable d = new BitmapDrawable(getResources(),data.imgdatahash.get(data.userVector.elementAt(0).id));
+
+                    Bitmap bitmap = data.imgdatahash.get(data.userVector.elementAt(0).id);
+                    //String path = MediaStore.Images.Media.insertImage(getContext() .getContentResolver(),
+                    //      bitmap,null,null);
+
+                    String path = getBase64String(bitmap);
+
+                    String s = Uri.decode(path);
+
+                    mylist.add(new listItem(s,
+                            data.userVector.elementAt(0).name, data.userVector.elementAt(0).stateMsg));
+
+                    myyAdapter.notifyDataSetChanged();
+
+                    /***친구 목록***/
+
+/*                    size = data.userVector.size();
+                    for (int i = 1; i < size; i++) {
+                        list.add(new listItem(MediaStore.Images.Media.insertImage(getContext() .getContentResolver(),
+                                data.imgdatahash.get(data.userVector.elementAt(i).id),null,null),
+                                data.userVector.elementAt(i).name, data.userVector.elementAt(i).stateMsg));
+
+                        myAdapter.notifyDataSetChanged();
+                    }*/
+
+                } catch (Exception e) {
+
+                }
+            }
+        });
 
         mylistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -205,11 +265,26 @@ public class Main_FriendFragment extends Fragment {
             chat.setText(getItem(pos).chat);
 
             imageLoader.displayImage(list.get(position).url, profile, options); //이미지 처리
-
+/*
+            Uri.fromFile(file).toString();
+            Uri.
+            Uri.parse(list.get(position).url)*/
+            //imageLoader.displayImage(   Uri.parse(list.get(position).url),profile,options);
 
             return v;
         }
     }
+
+    public String getBase64String(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+
+        byte[] imageBytes = byteArrayOutputStream.toByteArray();
+
+        return Base64.encodeToString(imageBytes, Base64.NO_WRAP);
+    }
+
 
     public void setImageLoader(DisplayImageOptions options,
                                ImageLoaderConfiguration config, Context context) { //이미지 처리

@@ -11,6 +11,12 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+
 
 public class MyService extends Service {
 
@@ -18,6 +24,14 @@ public class MyService extends Service {
     ServiceThread thread;
     NetworkThread networkThread;
     Notification Notifi;
+
+    static Socket socket = null;
+    static DataOutputStream dataOutputStream = null;
+    static DataInputStream dataInputStream = null;
+    static OutputStream outputStream = null;
+    static InputStream inputStream = null;
+
+
 
 
 /*    IBinder mBinder = new MyBinder();
@@ -90,14 +104,16 @@ public class MyService extends Service {
 
                 Notifi = new Notification.Builder(getApplicationContext())
                         .setContentTitle("Content Title")
-                        .setContentText("Content Text")
+                        .setContentText("톡이 도착했어요~")
                         .setSmallIcon(R.drawable.icon1)
                         .setTicker("알림!!!")
                         .setContentIntent(pendingIntent)
                         .build();
 
                 //소리추가
-                Notifi.defaults = Notification.DEFAULT_SOUND;
+                //Notifi.defaults = Notification.DEFAULT_SOUND;
+
+                Notifi.defaults |= Notification.DEFAULT_SOUND;
 
                 //알림 소리를 한번만 내도록
                 Notifi.flags = Notification.FLAG_ONLY_ALERT_ONCE;

@@ -1,5 +1,7 @@
 package app.wytalk;
 
+import android.graphics.Bitmap;
+
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -11,6 +13,7 @@ public class Data {
 
     public static Vector<User> userVector;
     public static HashMap<Integer, ChatData> chatDatahash;
+    public static HashMap<String,Bitmap> imgdatahash;
 
 
     public Data() {
@@ -21,6 +24,10 @@ public class Data {
         if (chatDatahash == null)
             chatDatahash = new HashMap<Integer, ChatData>();
 
+
+        if (imgdatahash == null)
+            imgdatahash = new HashMap<String,Bitmap>();
+
     }
 
     public void initUserInfo(String id, String name, String stateMsg) {
@@ -29,14 +36,20 @@ public class Data {
         userVector.add(user); //0:사용자,1~: 친구
     }
 
-    public void initchatData(Integer chatNum) {
+    public void initchatData(Integer chatNum) {// 채팅 목록 추가
 
         ChatData chatData = new ChatData(chatNum);
         chatDatahash.put(chatNum, chatData);
 
     }
 
-    public void addInchat(Integer chatNum, String chatIn) {
+    public void addInimg(String id, Bitmap img){
+
+        imgdatahash.put(id,img);
+
+    }
+
+    public void addInchat(Integer chatNum, String chatIn) { //채팅 내용 추가
 
         chatDatahash.get(chatNum).chatIn += (chatIn + "@@");
         chatDatahash.get(chatNum).lastMsg = chatIn;

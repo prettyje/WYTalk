@@ -115,13 +115,20 @@ public class Main_ChatFragment extends Fragment {
                         //listChatting.getChatNum(data.userVector.elementAt(i).id )방번호
 
                         if (listChatting.hasIdChatRoom(data.userVector.elementAt(i).id)) {
+
                             int num = listChatting.getChatNum(data.userVector.elementAt(i).id);
+
+                            String s = data.chatDatahash.get(num).lastMsg.trim(); //앞뒤공백제거
+                            String[] data2 = s.split("::");   //::처리
+
+
                             list.add(new listItem("drawable://" + R.drawable.test_image1,
-                                    data.userVector.elementAt(i).name, data.chatDatahash.get(num).lastMsg));
-                            System.out.println(data.userVector.elementAt(i).name+ data.chatDatahash.get(num).lastMsg);
+                                    data.userVector.elementAt(i).name, data2[4]+"  "+data2[5]));
+                            System.out.println(data.userVector.elementAt(i).name+ data2[5]);
                         }
 
                         myAdapter.notifyDataSetChanged();
+                        listView1.setAdapter(myAdapter);
                     }
 
                 }catch(Exception e){

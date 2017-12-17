@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
-import static app.wytalk.NetworkThread.dataOutputStream;
+import static app.wytalk.MyService.dataOutputStream;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -237,6 +237,7 @@ public class ChatActivity extends AppCompatActivity {
         //m_Adapter.notifyDataSetChanged();
         //m_ListView.deferNotifyDataSetChanged();
 
+        //m_ListView.requestFocus();
 
         // m_ListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         // m_ListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);

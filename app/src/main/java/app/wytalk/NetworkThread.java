@@ -1,12 +1,18 @@
 package app.wytalk;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
+
+import static app.wytalk.MyService.dataInputStream;
+import static app.wytalk.MyService.dataOutputStream;
+import static app.wytalk.MyService.inputStream;
+import static app.wytalk.MyService.outputStream;
+import static app.wytalk.MyService.socket;
 
 /**
  * Created by SJE on 2017-12-03.
@@ -15,12 +21,11 @@ import java.net.Socket;
 public class NetworkThread extends Thread {
 
 
-
-    static Socket socket = null;
+/*    static Socket socket = null;
     static DataOutputStream dataOutputStream = null;
     static DataInputStream dataInputStream = null;
     static OutputStream outputStream = null;
-    static InputStream inputStream = null;
+    static InputStream inputStream = null;*/
 
 
     //static String host = "192.168.0.39"; //102
@@ -41,7 +46,7 @@ public class NetworkThread extends Thread {
 
     }
 
-    public void stopForever(){
+    public void stopForever() {
         synchronized (this) {
             this.isRun = false;
         }
@@ -57,6 +62,10 @@ public class NetworkThread extends Thread {
             dataOutputStream = new DataOutputStream(outputStream);
             dataInputStream = new DataInputStream(inputStream);
 
+            //  inputStream2 = socket.getInputStream();
+            //  dataInputStream2 = new DataInputStream(inputStream2);
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,9 +76,9 @@ public class NetworkThread extends Thread {
             try {
 
 
-                System.out.println("Thread Start--");
+              //  dataInputStream.
+                //System.out.println("Thread Start--");
                 input = dataInputStream.readUTF();
-
 
 
                 if (input != null) {
@@ -88,7 +97,7 @@ public class NetworkThread extends Thread {
 
                     /*******************[LOGIN] 로그인*******************/
                     if (data[0].equals("[LOGIN]")) {
-                        if(data[1].equals("OK")){//Login 성공시
+                        if (data[1].equals("OK")) {//Login 성공시
                             handler.sendEmptyMessage(0);//쓰레드에 있는 핸들러에게 메세지를 보냄
 
                             System.out.println("test ok");
@@ -98,7 +107,7 @@ public class NetworkThread extends Thread {
                            /* Intent intent = new Intent(getApplicationContext(),MainViewActivity.class);
                             startActivity(intent);*/
 
-                        }else{
+                        } else {
                             System.out.println("test nok");
                             //Toast.makeText(MainActivity.this,"잘못된 정보입니다.",Toast.LENGTH_SHORT).show();
                         }
@@ -118,7 +127,21 @@ public class NetworkThread extends Thread {
                     } else if (data[0].equals("[FLIST_END]")) {
                         // listFriends.setFriendPanel();
                     }
+                    /*******************[PI] 프로필 사진 가져오기*******************/
+                    else if (data[0].equals("[PI]")) {
+                        System.out.println("Profile Icon..!!");
+                        int size = Integer.parseInt(data[1]);
+                        byte[] bytes = new byte[size];
 
+                        dataInputStream.readFully(bytes,0,size);
+                        String userID = data[2];
+                        System.out.println("dis.read(bytes) ok");
+
+                        Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        dataClass.addInimg(userID,image);
+                        System.out.println("Success");
+
+}
                     /*******************[MSG]  메시지 수신 *******************/
                     else if (data[0].equals("[MSG]")) {
 
